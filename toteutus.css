@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Patrick+Hand&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Libre Baskerville';
+}
+
+h1 {
+    font-size: 40px;
+    text-align: center;
+    font-family: 'Libre Baskerville', serif;
+    text-decoration: underline;
+    color: rgb(24, 82, 28);
+}
+
+p{
+    color: rgb(6, 91, 25);
+}
+
+li{
+    color: rgb(244, 88, 88);
+}
+h3{
+    color: rgb(24, 82, 28);
+}
+
+div{
+    text-align: center;
+}
+
+body{
+    background-color: rgb(210, 252, 224);
+}
