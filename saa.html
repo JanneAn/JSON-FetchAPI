@@ -11,7 +11,6 @@
 
 <body>
 
-
     <!-- Navigaatiopalkki -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -32,51 +31,67 @@
     </nav>
 
 
-    <div id="vastaus" class="container">
-        <script>
-            fetch("https://api.openweathermap.org/data/2.5/weather?lang=fi&q=helsinki&u nits=metric&APPID=314de1b8dabfbace7321a5ff474e27d1")
 
-                // Muunnetaan vastaus JSON muotoon
-                .then(function (response) {
-                    return response.json();
-                })
+    <!-- Lisätään eri divit säätiedoille -->
+    <div class="container mt-4">
 
-                // Käsitellään muunnettu (eli JSON muotoinen) vastaus
-                .then(function (responseJson) {
-
-                    // Testataan onnistuuko json-luku
-                    saa(responseJson);
-                    
-                })
-
-                // Jos tuli jokin virhe
-                .catch(function (error) {
-                    document.getElementById("vastaus").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
-                })
-
-            
-                function saa(data) {
-                    var teksti = "<ul>"; // määritellään muuttuja, johon tulostettava tieto kerätään
-
-                    // otsikkotiedon hakeminen ja sijoittaminen h1-elementtiin
-                    
-                    teksti += "<li>Kaupunki: " + data.name + "</li>";
-                    teksti += "<li>Sää: " + data.weather[0].description + "</li>";
-                    let kelvinTemp = data.main.temp;
-                    let celsiusTemp = kelvinTemp - 273.15;
-                    teksti += "<li>Lämpötila: " + celsiusTemp.toFixed(1) + "c&deg </li>";
-                    teksti += "<li>Tuulen nopeus: " + data.wind.speed + "m/s </li>";
-                    var kuva = 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
-                    teksti = teksti + "<p><img src='" + kuva + "' alt='kuva' ></p>";
-                    teksti += "</ul>";
-
-                    // tähän tulee muiden tietojen käsittely
-
-                    // teksti-muuttujan sisällön tulostus 
-                    document.getElementById("vastaus").innerHTML = teksti;
-                    
-                }
-
-        </script>
+        <h1>Sää - siitä on aina jotain kerrottavaa</h1>
+        <p>Millainen sää Helsingissä on? Entä Tampereella?</p>
+        
+        <div class="row">
+            <div id="helsinkiSaa" class="col-md-3"></div>
+            <div id="tampereSaa" class="col-md-3"></div>
+        </div>
     </div>
+
+    <script>
+
+        var avain = "314de1b8dabfbace7321a5ff474e27d1";
+        var helsinki = "https://api.openweathermap.org/data/2.5/weather?lang=fi&q=helsinki&units=metric&APPID=" + avain;
+        var tampere = "https://api.openweathermap.org/data/2.5/weather?lang=fi&q=tampere&units=metric&APPID=" + avain;
+
+        // Hae Helsingin säätiedot
+        fetch(helsinki)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (responseJson) {
+                naytaSaa(responseJson, "helsinkiSaa"); // Näytetään Helsingin sää oikeassa divissä
+            })
+            .catch(function (error) {
+                document.getElementById("helsinkiSaa").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
+            });
+
+        // Hae Tampereen säätiedot
+        fetch(tampere)
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (responseJson) {
+                naytaSaa(responseJson, "tampereSaa"); // Näytetään Tampereen sää oikeassa divissä
+            })
+            .catch(function (error) {
+                document.getElementById("tampereSaa").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
+            });
+
+        // Funktio säätietojen näyttämiseksi annettuun elementtiin
+        function naytaSaa(data, elementId) {
+            var teksti = "<ul>"; // määritellään muuttuja, johon tulostettava tieto kerätään
+
+            // Lisätään säätiedot
+            teksti += "<li>Kaupunki: " + data.name + "</li>";
+            teksti += "<li>Sää: " + data.weather[0].description + "</li>";
+            teksti += "<li>Lämpötila: " + data.main.temp + "°C</li>";
+            teksti += "<li>Tuulen nopeus: " + data.wind.speed + " m/s</li>";
+            var kuva = 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
+            teksti += "<p><img src='" + kuva + "' alt='kuva'></p>";
+            teksti += "</ul>";
+
+            // Tulostetaan tiedot oikeaan div-elementtiin
+            document.getElementById(elementId).innerHTML += teksti;
+        }
+
+    </script>
 </body>
+
+</html>
