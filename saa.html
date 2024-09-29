@@ -35,59 +35,90 @@
     <!-- Lisätään eri divit säätiedoille -->
     <div class="container mt-4">
 
+           <!-- Lisätään otsikko --> 
         <h1>Sää - siitä on aina jotain kerrottavaa</h1>
+
+            <!-- Lisätään teksti otsikon alapuolelle -->
         <p>Millainen sää Helsingissä on? Entä Tampereella?</p>
         
+            <!-- Luodaan div, joka on rivi-luokkaa, jotta molemmat säät tulevat samalle riville -->
         <div class="row">
+
+                <!-- Luodaan div Helsingin säätiedoille, joka on luokkaa sarake -->
             <div id="helsinkiSaa" class="col-md-3"></div>
+
+                <!-- Luodaan div Tampereen säätiedoille, joka on luokkaa sarake -->
             <div id="tampereSaa" class="col-md-3"></div>
         </div>
     </div>
 
-    <script>
 
+    <script>
+            // määriteään openweather-avain muuttujaan
         var avain = "314de1b8dabfbace7321a5ff474e27d1";
+
+            // määriteään Helsingin säätietojen haku-url muuttujaan
         var helsinki = "https://api.openweathermap.org/data/2.5/weather?lang=fi&q=helsinki&units=metric&APPID=" + avain;
+
+            // määriteään Tampereen säätietojen haku-url muuttujaan
         var tampere = "https://api.openweathermap.org/data/2.5/weather?lang=fi&q=tampere&units=metric&APPID=" + avain;
 
-        // Hae Helsingin säätiedot
+            // Hae Helsingin säätiedot
         fetch(helsinki)
             .then(function (response) {
                 return response.json();
             })
             .then(function (responseJson) {
-                naytaSaa(responseJson, "helsinkiSaa"); // Näytetään Helsingin sää oikeassa divissä
+                    // Haku onnistui, joten suoritetaan funktio naytaSaa, johon annetaan elementId:ksi helsinkiSaa
+                naytaSaa(responseJson, "helsinkiSaa"); 
             })
+                // Jos haku ei onnistu, tulostetaan virheilmoitus
             .catch(function (error) {
                 document.getElementById("helsinkiSaa").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
             });
 
-        // Hae Tampereen säätiedot
+            // Hae Tampereen säätiedot
         fetch(tampere)
             .then(function (response) {
                 return response.json();
             })
             .then(function (responseJson) {
-                naytaSaa(responseJson, "tampereSaa"); // Näytetään Tampereen sää oikeassa divissä
+                    // Haku onnistui, joten suoritetaan funktio naytaSaa, johon annetaan elementId:ksi tampereSaa
+                naytaSaa(responseJson, "tampereSaa");
             })
+                // Jos haku ei onnistu, tulostetaan virheilmoitus
             .catch(function (error) {
                 document.getElementById("tampereSaa").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
             });
 
         // Funktio säätietojen näyttämiseksi annettuun elementtiin
         function naytaSaa(data, elementId) {
-            var teksti = "<ul>"; // määritellään muuttuja, johon tulostettava tieto kerätään
 
-            // Lisätään säätiedot
+                // määritellään muuttuja, johon tulostettava tieto kerätään
+            var teksti = "<ul>"; 
+
+                // haetaan kaupungin nimi
             teksti += "<li>Kaupunki: " + data.name + "</li>";
+
+                // haetaan sään kuvaus
             teksti += "<li>Sää: " + data.weather[0].description + "</li>";
+
+                // haetaan lämpötila
             teksti += "<li>Lämpötila: " + data.main.temp + "°C</li>";
+
+                // haetaan tuulennopeus
             teksti += "<li>Tuulen nopeus: " + data.wind.speed + " m/s</li>";
+
+                // luodaan muuttuja, johon tulee url-osoite kuvaan
             var kuva = 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png';
+
+                // lisätään kuva sivulle
             teksti += "<p><img src='" + kuva + "' alt='kuva'></p>";
+
+                // lopetetaan lista
             teksti += "</ul>";
 
-            // Tulostetaan tiedot oikeaan div-elementtiin
+                // tulostetaan tiedot oikeaan div-elementtiin
             document.getElementById(elementId).innerHTML += teksti;
         }
 
